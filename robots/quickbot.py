@@ -33,6 +33,26 @@ class QuickBot_IRSensor(ProximitySensor):
         else:
             return np.polyval(self.ir_coeff,dst)
 
+class QuickBot_SonarSensor(ProximitySensor):
+
+     def __init__(self,pose,robot):
+         # values copied from SimIAm
+         ProximitySensor.__init__(self, pose, robot, (0.05, 2.54, np.radians(8)))
+         self.sensor_undetected_obstacle_color = 0x66BFEFFF
+         self.sensor_detected_obstacle_color = 0x663300FF
+         self.set_color(self.sensor_undetected_obstacle_color)
+
+     def distance_to_value(self,dst):
+        """Returns the distance calculation from the distance readings of the proximity sensors"""
+
+        if dst < self.rmin :
+            return 0.04
+        elif dst > self.rmax:
+            return 2.54
+        else:
+            return dst
+
+
 class QuickBot(Robot):
     """Inherts for the simobject--->robot class for behavior specific to the Khepera3""" 
     def __init__(self, pose, color = 0xFFFFFF):
@@ -145,7 +165,9 @@ class QuickBot(Robot):
         
         # create IR sensors
         self.ir_sensors = []
-              
+        # create Sonar sensors
+        self.sonar_sensors = []
+
         ir_sensor_poses = [
                           Pose(-0.015, 0.0534, np.radians(90)),
                           Pose( 0.0613, 0.0244, np.radians(30)),
@@ -155,9 +177,16 @@ class QuickBot(Robot):
                           Pose( 0.0613,-0.0244, np.radians(-30)),
                           Pose(-0.015,-0.0534, np.radians(-90))
                           ]                          
-                           
+        sonar_sensor_poses = [
+                          Pose(0.0613,-0.0244, np.radians(-45)),
+                          Pose( 0.0613, 0.0, np.radians(0)),
+                          Pose( 0.0613, 0.0244, np.radians(45))
+                          ]
         for pose in ir_sensor_poses:
             self.ir_sensors.append(QuickBot_IRSensor(pose,self))
+
+        for pose in sonar_sensor_poses:
+            self.sonar_sensors.append(QuickBot_SonarSensor(pose,self))
                                 
         # initialize motion
         self.ang_velocity = (0.0,0.0)
@@ -191,15 +220,21 @@ class QuickBot(Robot):
         self.info.ir_sensors.rmax = 0.8
         self.info.ir_sensors.rmin = 0.1
 
+        self.info.sonar_sensors = Struct()
+        self.info.sonar_sensors.poses = sonar_sensor_poses
+        self.info.sonar_sensors.readings = None
+        self.info.sonar_sensors.rmax = 2.54
+        self.info.sonar_sensors.rmin = 0.05
+
     def draw(self,r):
         r.set_pose(self.get_pose())
         r.set_pen(0)
         r.set_brush(sim_server_helpers.Colors.IrSensors)
-        r.draw_polygon(self._shapes.ir_1)
+        '''r.draw_polygon(self._shapes.ir_1)
         r.draw_polygon(self._shapes.ir_2)
         r.draw_polygon(self._shapes.ir_3)
         r.draw_polygon(self._shapes.ir_4)
-        r.draw_polygon(self._shapes.ir_5)
+        r.draw_polygon(self._shapes.ir_5)'''
 
         r.set_brush(sim_server_helpers.Colors.Wheels)
         r.draw_polygon(self._shapes.left_wheel)
@@ -251,6 +286,7 @@ class QuickBot(Robot):
         
     def get_info(self):
         self.info.ir_sensors.readings = [sensor.reading() for sensor in self.ir_sensors]
+        self.info.sonar_sensors.readings = [sensor.reading() for sensor in self.sonar_sensors]
         return self.info
     
     def set_inputs(self,inputs):
@@ -279,13 +315,21 @@ class QuickBot(Robot):
     def get_external_sensors(self):
         return self.ir_sensors
 
+    def get_sonar_sensors(self):
+        return self.sonar_sensors
+
     def draw_sensors(self,renderer):
         """Draw the sensors that this robot has"""
         for sensor in self.ir_sensors:
             sensor.draw(renderer)
+
+        for sensor in self.sonar_sensors:
+            sensor.draw(renderer)
             
     def update_sensors(self):
         for sensor in self.ir_sensors:
+            sensor.update_distance()
+        for sensor in self.sonar_sensors:
             sensor.update_distance()
     
 if __name__ == "__main__":

@@ -432,6 +432,18 @@ class Simulator(threading.Thread):
         """Get the simulation state as a `bool`"""
         return self.__state == RUN
 ###------------------
+    def check_sensor(self, sensor, rqtree):
+        sensor.get_world_envelope(True)
+        rect = Rect(sensor.get_bounding_rect())
+        sensor.update_distance()
+        # distance to obstacles
+        for obstacle in self.__qtree.find_items(rect):
+            sensor.update_distance(obstacle)
+        # distance to other robots
+        if rqtree is None: return
+        for other in rqtree.find_items(rect):
+            if other is not robot:
+                sensor.update_distance(other)
 
     def check_collisions(self):
         self.__check_collisions()
@@ -453,18 +465,11 @@ class Simulator(threading.Thread):
                 
             # update proximity sensors
             for sensor in robot.get_external_sensors():
-                sensor.get_world_envelope(True)
-                rect = Rect(sensor.get_bounding_rect())
-                sensor.update_distance()
-                # distance to obstacles
-                for obstacle in self.__qtree.find_items(rect):
-                    sensor.update_distance(obstacle)
-                # distance to other robots
-                if rqtree is None: continue
-                for other in rqtree.find_items(rect):
-                    if other is not robot:
-                        sensor.update_distance(other)
-            
+                self.check_sensor(sensor, rqtree)
+
+            for sensor in robot.get_sonar_sensors():
+                self.check_sensor(sensor, rqtree)
+
             rect = Rect(robot.get_bounding_rect())
             
             # against nearest obstacles

@@ -58,9 +58,16 @@ class ProximitySensor(MountedSensor):
                          (self.rmax*cos(self.phi/2),-self.rmax*sin(self.phi/2))]
                     
         self.__distance = 65536
-        self.set_color(0x33FF5566)
+        self.sensor_detected_obstacle_color = 0xCCFF5566
+        self.sensor_undetected_obstacle_color = 0x33FF5566
+        self.set_color(self.sensor_undetected_obstacle_color)
 
     def get_cone(self, distance):
+        '''return [(self.rmin*cos(self.phi/2),self.rmin*sin(self.phi/2)),
+                (distance*cos(self.phi/2),distance*sin(self.phi/2)),
+                (distance,0),
+                (distance*cos(self.phi/2),-distance*sin(self.phi/2)),
+                (self.rmin*cos(self.phi/2),-self.rmin*sin(self.phi/2))] '''
         return [(self.rmin*cos(self.phi/2),self.rmin*sin(self.phi/2)),
                 (distance*cos(self.phi/2),distance*sin(self.phi/2)),
                 (distance,0),
@@ -88,7 +95,7 @@ class ProximitySensor(MountedSensor):
         if sim_object is None:
             # reset distance to max
             self.__distance = 65536
-            self.set_color(0x33FF5566)
+            self.set_color(self.sensor_undetected_obstacle_color)
             self.pts = self.get_cone(self.rmax)
             return True
         else:
@@ -96,7 +103,7 @@ class ProximitySensor(MountedSensor):
             if distance_to_obj:
                 if self.__distance > distance_to_obj:
                     #self.set_color(0x336655FF)
-                    self.set_color(0xCCFF5566)
+                    self.set_color(self.sensor_detected_obstacle_color)
                     self.pts = self.get_cone(distance_to_obj)
                     self.__distance = distance_to_obj
                     return True
@@ -106,12 +113,13 @@ class ProximitySensor(MountedSensor):
         """draws the sensor simobject"""
         r.set_pose(self.get_pose())
         r.set_brush(self.get_color())
-        r.draw_ellipse(0,0,min(1,self.rmin/2),min(1,self.rmin/2))
+        r.draw_ellipse(0,0,min(1,self.rmin/5),min(1,self.rmin/5))
+
         r.draw_polygon(self.pts)
         
     def get_distance_to(self, sim_object):
         """Gets the distance to another simobject
-        returns distance in centimeters or None if not in contact"""
+        returns distance in meters or None if not in contact"""
         ox, oy, ot = self.get_pose()
         min_distance = None
         for px, py in self.get_contact_points(sim_object):
