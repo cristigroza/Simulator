@@ -12,7 +12,7 @@ from PyQt4 import QtGui
 from qt_mainwindow import SimulationWidget
 
 if __name__ == "__main__":
-    test = 3
+
     app = QtGui.QApplication(sys.argv)
     simWidget = SimulationWidget()
     simWidget.show()
