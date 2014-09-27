@@ -1,7 +1,7 @@
 <simulation>
 		<robot type="QuickBot">
         <supervisor type="week7.QBFullSupervisor" />
-        <pose x="-1" y="-1" theta="0" />
+        <pose x="0" y="0" theta="0" />
     </robot>
     
     <obstacle>
