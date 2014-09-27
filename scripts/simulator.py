@@ -14,6 +14,7 @@ from sim_server import SimServer
 import pose
 import simobject
 from quadtree import QuadTree, Rect
+from  pose import Pose
 
 PAUSE = 0
 RUN = 1
@@ -78,7 +79,7 @@ class Simulator(threading.Thread):
         self.__world = None
         
         self.__log_queue = deque()
-
+        self._sim_server = None
 
 
         # Internal objects
@@ -108,6 +109,23 @@ class Simulator(threading.Thread):
     def __init_sim_server(self):
         self._sim_server = SimServer(self.__robots[0], self.__trackers[0], self.__log_queue, self)
 
+    def set_robot_pose(self,pose):
+        self.__robots[0].set_pose(pose)
+
+    def update_robot(self,type,pose):
+        robot_class = helpers.load_by_name(type,'robots')
+
+        robot = robot_class(pose)
+        robot.set_logqueue(self.__log_queue)
+        #Empty list
+        del self.__robots[:]
+        # append robot after supervisor for the case of exceptions
+        self.__robots. append(robot)
+        # Create trackers
+        self.__trackers.append(simobject.Path(pose,robot.get_color()))
+        if self._sim_server is not None:
+            self._sim_server.set_robot(robot)
+
     def __construct_world(self):
         """Creates objects previously loaded from the world xml file.
            
@@ -134,23 +152,8 @@ class Simulator(threading.Thread):
             if thing.type == 'robot':
                 try:
                     # Create robot
-                    robot_class = helpers.load_by_name(thing.robot.type,'robots')
-                    if thing.robot.options is not None:
-                        robot = robot_class(thing.robot.pose, options = Struct(thing.robot.options))
-                    else:
-                        robot = robot_class(thing.robot.pose)
-                    robot.set_logqueue(self.__log_queue)
-                    if thing.robot.color is not None:
-                        robot.set_color(thing.robot.color)
-                    elif len(self.__robots) < 8:
-                        robot.set_color(self.__nice_colors[len(self.__robots)])
-                        
+                    self.update_robot(thing.robot.type,thing.robot.pose)
 
-                    # append robot after supervisor for the case of exceptions
-                    self.__robots.append(robot)
-                    
-                    # Create trackers
-                    self.__trackers.append(simobject.Path(thing.robot.pose,robot.get_color()))
                 except:
                     self.log("[Simulator.construct_world] Robot creation failed!")
                     raise
@@ -347,6 +350,12 @@ class Simulator(threading.Thread):
 
     def show_server_log(self, show):
         self._sim_server.set_server_log(show)
+
+    def robot_changed(self, qt_robotName,xPos, yPos, phi):
+        self.update_robot(str(qt_robotName), Pose(xPos, yPos, phi))
+
+    def apply_robot_settings(self, xPos, yPos, phi):
+        self.set_robot_pose(Pose(xPos, yPos, phi))
 
 
 

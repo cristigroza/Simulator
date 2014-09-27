@@ -296,6 +296,8 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
             self.server_dock = ServerDock(self)
             self.server_dock.start_server_request.connect(self.on_start_server)
             self.server_dock.show_server_log.connect(self.on_show_server_log)
+            self.server_dock.robot_changed.connect(self.on_robot_changed)
+            self.server_dock.apply_robot_settings.connect(self.on_apply_robot_settings)
             self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, self.server_dock)
         else:
             self.server_dock.show()
@@ -413,6 +415,12 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
 
     def on_show_server_log(self,show):
             self.run_simulator_command('show_server_log',show)
+
+    def on_robot_changed(self,robotName,xPos, yPos, phi):
+            self.run_simulator_command('robot_changed',robotName,xPos, yPos, phi)
+
+    def on_apply_robot_settings(self,xPos, yPos, phi):
+                self.run_simulator_command('apply_robot_settings',xPos, yPos, phi)
 
     def apply_parameters(self, robot_id, params):
         self.run_simulator_command('apply_parameters', robot_id, params)
