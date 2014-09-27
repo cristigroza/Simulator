@@ -18,7 +18,7 @@ def computeRotation(max_encoder_buffer_value, new_value, old_value):
     return val
 
 
-def computeWellRotationSpeed(robot, new_value, old_value, run_time):
+def computeWheelRotationSpeed(robot, new_value, old_value, run_time):
     rotation = computeRotation(robot.info.wheels.max_encoder_buffer_value, new_value, old_value)
     v = (robot.info.wheels.perimeter * rotation)/(run_time * robot.info.wheels.ticks_per_rev)
     return v
@@ -42,3 +42,6 @@ class Colors:
     IrSensors = 0xA32900
     BasePlate = 0x55AAEE
     Wheels = 0x000000
+x=3.58
+print(x*43/8.89)
+print("Half:" + str((x*43/8.89)/2))

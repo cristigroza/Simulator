@@ -21,6 +21,9 @@ class SimServer:
         self._in_server_queue = self._server_thread.getOutQueue()
         self._simParent = simParent
 
+    def set_robot(self, robot):
+        self._robot = robot
+
     def set_server_log(self, show):
         self._server_thread.set_server_log(show)
 
@@ -58,8 +61,8 @@ class SimServer:
             self.log("Server is running...")
     time_constant = 0.02 # 20 milliseconds
     def DcMotorPositionTimeCtrAll(self, left_wheel, right_wheel, run_time):
-        vl = self.helpers.computeWellRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_encoder_ticks, run_time)
-        vr = self.helpers.computeWellRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_encoder_ticks, run_time)
+        vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_encoder_ticks, run_time)
+        vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_encoder_ticks, run_time)
 
         self._robot.info.wheels.left_encoder_ticks = left_wheel
         self._robot.info.wheels.right_encoder_ticks = right_wheel
@@ -74,39 +77,67 @@ class SimServer:
 
         self._out_server_queue.put("Done.")
 
-    def get_ir_senfor_readings(self, ir_sensor_id):
+    def get_ir_sensor_readings(self, ir_sensor_id):
         info = self._robot.get_info()
         return info.ir_sensors.readings[ir_sensor_id]
 
-    def getLeftWellEncoderValue(self):
+    def get_sonar_sensor_readings(self,sonar_sensor_id):
+        info = self._robot.get_info()
+        return info.sonar_sensors.readings[sonar_sensor_id]
+
+    def getLeftWheelEncoderValue(self):
         info = self._robot.get_info()
         self._out_server_queue.put(info.wheels.left_ticks)
 
-    def getRightWellEncoderValue(self):
+    def getRightWheelEncoderValue(self):
         info = self._robot.get_info()
         self._out_server_queue.put(info.wheels.right_ticks)
-
+    #IR
     def getIR1(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(0))
+        self._out_server_queue.put(self.get_ir_sensor_readings(0))
 
     def getIR2(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(1))
+        self._out_server_queue.put(self.get_ir_sensor_readings(1))
 
     def getIR3(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(2))
+        self._out_server_queue.put(self.get_ir_sensor_readings(2))
 
     def getIR4(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(3))
+        self._out_server_queue.put(self.get_ir_sensor_readings(3))
 
     def getIR5(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(4))
+        self._out_server_queue.put(self.get_ir_sensor_readings(4))
 
     def getIR6(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(5))
+        self._out_server_queue.put(self.get_ir_sensor_readings(5))
 
     def getIR7(self):
-        self._out_server_queue.put(self.get_ir_senfor_readings(6))
+        self._out_server_queue.put(self.get_ir_sensor_readings(6))
 
+    def getIR8(self):
+        self._out_server_queue.put(self.get_ir_sensor_readings(7))
+
+    def getIR9(self):
+        self._out_server_queue.put(self.get_ir_sensor_readings(8))
+
+    #Sonsr
+    def getSonar1(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(0))
+
+    def getSonar2(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(1))
+
+    def getSonar3(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(2))
+
+    def getSonar4(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(3))
+
+    def getSonar5(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(4))
+
+    def getSonar6(self):
+        self._out_server_queue.put(self.get_sonar_sensor_readings(5))
 
     def log(self, message):
         print("{}: {}".format(self.__class__.__name__,message))
