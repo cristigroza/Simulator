@@ -120,7 +120,7 @@ class Simulator(threading.Thread):
         #Empty list
         del self.__robots[:]
         # append robot after supervisor for the case of exceptions
-        self.__robots. append(robot)
+        self.__robots.append(robot)
         # Create trackers
         self.__trackers.append(simobject.Path(pose,robot.get_color()))
         if self._sim_server is not None:
@@ -476,8 +476,9 @@ class Simulator(threading.Thread):
             for sensor in robot.get_external_sensors():
                 self.check_sensor(sensor, rqtree)
 
-            for sensor in robot.get_sonar_sensors():
-                self.check_sensor(sensor, rqtree)
+            sonars = robot.get_sonar_sensors()
+            for sensor in sonars[:len(sonars)/2]:
+                    self.check_sensor(sensor, rqtree)
 
             rect = Rect(robot.get_bounding_rect())
             

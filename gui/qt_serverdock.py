@@ -4,6 +4,7 @@ from math import radians
 from collections import OrderedDict
 from traceback import format_exception
 import sys
+import global_val
 
 
 class ServerDock(QtGui.QDockWidget):
@@ -69,8 +70,9 @@ class ServerDock(QtGui.QDockWidget):
         robotsPanel = QtGui.QFrame(self)
 
         self.xPoz = QtGui.QLineEdit("-1",parent)
-
         self.yPoz = QtGui.QLineEdit("-1",parent)
+        self.irSigma = QtGui.QLineEdit(str(global_val.ir_sigma_deviation),parent)
+        self.sonarSigma = QtGui.QLineEdit(str(global_val.sonar_sigma_deviation),parent)
 
         self.phi = QtGui.QSpinBox(parent)
         self.phi.setMinimum(0)
@@ -85,6 +87,8 @@ class ServerDock(QtGui.QDockWidget):
         fl.addRow('X:',self.xPoz)
         fl.addRow('Y:',self.yPoz)
         fl.addRow('Orientation:',self.phi)
+        fl.addRow('IR sigma deviation:',self.irSigma)
+        fl.addRow('Sonar sigma deviation:',self.sonarSigma)
         fl.addRow(self.btn_apply)
         robotsPanel.setLayout(fl)
         self.robotsGroup.setLayout(fl)
@@ -97,6 +101,8 @@ class ServerDock(QtGui.QDockWidget):
         self.robot_changed.emit(str(self.cb_robots.currentText()),float(self.xPoz.text()),float(self.yPoz.text()),radians(float(self.phi.text())))
 
     def apply_robot_settings_clicked(self):
+        global_val.ir_sigma_deviation = float(self.irSigma.text())
+        global_val.sonar_sigma_deviation = float(self.sonarSigma.text())
         self.apply_robot_settings.emit(float(self.xPoz.text()),float(self.yPoz.text()),radians(float(self.phi.text())))
 
     def start_server_clicked(self):
