@@ -8,30 +8,23 @@
 #
 import numpy as np
 from  pose import Pose
-from sensor import ProximitySensor
+from sensor import SonarSensor
 from math import ceil, exp, sin, cos, tan, pi
 from quickbot import QuickBot
 import sim_server_helpers
 
 
-class DRK8080_SonarSensor(ProximitySensor):
+class DRK8080_SonarSensor(SonarSensor):
 
      def __init__(self,pose,robot):
          # values copied from SimIAm
-         ProximitySensor.__init__(self, pose, robot, (0.05, 2.54, np.radians(8)))
+         x,y,fi = pose
+         SonarSensor.__init__(self, pose, robot, (0.05, 2.54, fi))
          self.sensor_undetected_obstacle_color = 0x66FFC299
          self.sensor_detected_obstacle_color = 0x663300FF
          self.set_color(self.sensor_undetected_obstacle_color)
 
-     def distance_to_value(self,dst):
-        """Returns the distance calculation from the distance readings of the proximity sensors"""
 
-        if dst < self.rmin :
-            return 4
-        elif dst > self.rmax:
-            return 254
-        else:
-            return dst * 100
 
 
 class DRK8080(QuickBot):
@@ -65,8 +58,15 @@ class DRK8080(QuickBot):
                             Pose(0.1, 0.0, np.radians(0)),
                             Pose(0.1*cos(np.radians(45)), -0.1*sin(np.radians(45)), np.radians(-45)),
                             Pose(-0.1*cos(np.radians(45)), -0.1*sin(np.radians(45)), np.radians(-135)),
-                            Pose(-0.1*cos(np.radians(45)), 0.1*sin(np.radians(45)), np.radians(135)),
                             Pose(-0.1, 0.0, np.radians(180)),
+
+                            #The next 3 sensors are just for good looks, we don't take into account the readings
+                            Pose(0.1*cos(np.radians(45)), 0.1*sin(np.radians(45)), np.radians(45)),
+                            Pose(0.1, 0.0, np.radians(0)),
+                            Pose(0.1*cos(np.radians(45)), -0.1*sin(np.radians(45)), np.radians(-45)),
+                            Pose(-0.1*cos(np.radians(45)), -0.1*sin(np.radians(45)), np.radians(-135)),
+                            Pose(-0.1, 0.0, np.radians(180)),
+
 
                           ],DRK8080_SonarSensor)
         
@@ -76,7 +76,7 @@ class DRK8080(QuickBot):
         self.info.wheels.radius = 0.085
         self.info.wheels.base_length = 0.3 # distance between the wheels
         self.info.wheels.ticks_per_rev = 1200
-        self.info.wheels.max_encoder_buffer_value = 32000
+        self.info.wheels.max_encoder_buffer_value = 4428
 
         self.info.wheels.max_velocity = 2*pi*130/60 # 130 RPM
         self.info.wheels.min_velocity = 2*pi*30/60  #  30 RPM

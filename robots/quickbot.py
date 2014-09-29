@@ -110,9 +110,6 @@ class QuickBot(Robot):
         self.info.wheels.left_ticks = 0
         self.info.wheels.right_ticks = 0
 
-        self.info.wheels.left_encoder_ticks = 0
-        self.info.wheels.right_encoder_ticks = 0
-
         self.info.wheels.perimeter = self.info.wheels.radius * 2 * pi
 
 
@@ -258,8 +255,8 @@ class QuickBot(Robot):
 
         self.left_revolutions += vl*dt/2/pi
         self.right_revolutions += vr*dt/2/pi
-        self.info.wheels.left_ticks = int(self.left_revolutions*self.info.wheels.ticks_per_rev)
-        self.info.wheels.right_ticks = int(self.right_revolutions*self.info.wheels.ticks_per_rev)
+        #self.info.wheels.left_ticks = int(self.left_revolutions*self.info.wheels.ticks_per_rev)
+        #self.info.wheels.right_ticks = int(self.right_revolutions*self.info.wheels.ticks_per_rev)
         
     def get_info(self):
         self.info.ir_sensors.readings = [sensor.reading() for sensor in self.ir_sensors]

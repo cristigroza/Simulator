@@ -61,16 +61,17 @@ class SimServer:
             self.log("Server is running...")
     time_constant = 0.02 # 20 milliseconds
     def DcMotorPositionTimeCtrAll(self, left_wheel, right_wheel, run_time):
-        vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_encoder_ticks, run_time)
-        vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_encoder_ticks, run_time)
+        vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_ticks, run_time)
+        vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_ticks, run_time)
 
-        self._robot.info.wheels.left_encoder_ticks = left_wheel
-        self._robot.info.wheels.right_encoder_ticks = right_wheel
+        self._robot.info.wheels.left_ticks = left_wheel
+        self._robot.info.wheels.right_ticks = right_wheel
         nrRuns = int(run_time/self.time_constant)
 
         for x in range(0, nrRuns):
             self._robot.set_inputs((vl,vr))
             self._robot.move(self.time_constant)
+
             self._tracker.add_point(self._robot.get_pose())
             self._simParent.check_collisions()
             self._simParent.draw()
@@ -86,12 +87,10 @@ class SimServer:
         return info.sonar_sensors.readings[sonar_sensor_id]
 
     def getLeftWheelEncoderValue(self):
-        info = self._robot.get_info()
-        self._out_server_queue.put(info.wheels.left_ticks)
+        self._out_server_queue.put(self._robot.info.wheels.left_ticks)
 
     def getRightWheelEncoderValue(self):
-        info = self._robot.get_info()
-        self._out_server_queue.put(info.wheels.right_ticks)
+        self._out_server_queue.put(self._robot.info.wheels.right_ticks)
     #IR
     def getIR1(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(0))

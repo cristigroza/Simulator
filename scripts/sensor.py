@@ -6,10 +6,11 @@
 #
 
 import random
+import numpy as np
 from simobject import SimObject
 from pose import Pose
-from math import sin, cos, sqrt
-
+from math import sin, cos, sqrt, radians,pi
+import global_val
 from robot import Robot
 
 class Sensor:
@@ -62,12 +63,13 @@ class ProximitySensor(MountedSensor):
         self.sensor_undetected_obstacle_color = 0x33FF5566
         self.set_color(self.sensor_undetected_obstacle_color)
 
+    def add_gauss_noise(self,value, sigma):
+        """Returns the value with an added normal noise
+
+        The return value is normally distributed around value with a standard deviation sigma
+        """
+        return random.gauss(value,sigma)
     def get_cone(self, distance):
-        '''return [(self.rmin*cos(self.phi/2),self.rmin*sin(self.phi/2)),
-                (distance*cos(self.phi/2),distance*sin(self.phi/2)),
-                (distance,0),
-                (distance*cos(self.phi/2),-distance*sin(self.phi/2)),
-                (self.rmin*cos(self.phi/2),-self.rmin*sin(self.phi/2))] '''
         return [(self.rmin*cos(self.phi/2),self.rmin*sin(self.phi/2)),
                 (distance*cos(self.phi/2),distance*sin(self.phi/2)),
                 (distance,0),
@@ -129,3 +131,90 @@ class ProximitySensor(MountedSensor):
                     min_distance = distance
             else: min_distance = distance
         return min_distance
+
+class SonarSensor(ProximitySensor):
+
+     def __init__(self,pose,robot,geometry):
+        """Create a proximity sensor mounted on robot at pose. The geometry
+        is a (rmin, rmax, angle) tuple
+        """
+        ProximitySensor.__init__(self,pose,robot,geometry)
+        self.rmin, self.rmax, self.phi = geometry
+        self.fullcone = self.get_cone(self.rmax)
+
+     def get_cone(self, distance):
+
+        fi_m = [ pi/4+(x*1.0)/10 for x in range(0,9)]
+        x1 = [(distance * cos(fi)) * fi *1.8 * cos(fi) for fi in fi_m]
+        y1 = [(distance * cos(fi)) * fi *1.8 * sin(fi) for fi in fi_m]
+        xr = [ x * cos(-pi/4) - y *sin(-pi/4) for x,y in zip(x1,y1)]
+        yr = [ x * sin(-pi/4) + y *cos(-pi/4) for x,y in zip(x1,y1)]
+        yr_n = [-y for y in yr]
+        upper_half = zip(xr,yr)
+        lower_half = zip(xr,yr_n)
+        rev_lower_half = lower_half[::-1]
+        return upper_half + rev_lower_half
+
+     def get_envelope(self):
+        """Return the envelope of the sensor"""
+        return self.fullcone
+     def get_distance_to(self, sim_object):
+        """Gets the distance to another simobject
+        returns distance in meters or None if not in contact"""
+        ox, oy, ot = self.get_pose()
+        min_distance = None
+        for px, py in self.get_contact_points(sim_object):
+            distance = sqrt((px-ox)*(px-ox)+(py-oy)*(py-oy))
+            if min_distance is not None:
+                if distance < min_distance:
+                    min_distance = distance
+            else: min_distance = distance
+        return min_distance
+
+     def distance_to_value(self,dst):
+        """Returns the distance calculation from the distance readings of the proximity sensors"""
+
+        if dst < self.rmin :
+            return 4
+        elif dst > self.rmax:
+            return 254
+        else:
+            return self.add_gauss_noise(dst * 100, global_val.sonar_sigma_deviation)
+
+
+class IRSensor(ProximitySensor):
+    """Inherits from the proximity sensor class. Performs calculations specific to the khepera3 for its characterized proximity sensors"""
+
+    def __init__(self,pose,robot, geometry):
+        # values copied from SimIAm
+
+        ProximitySensor.__init__(self, pose, robot, geometry)
+        self.ir_coeff = self.compute_ir_coeff()
+
+    def distance_to_value(self,dst):
+        """Returns the distance calculation from the distance readings of the proximity sensors"""
+
+        if dst < self.rmin :
+            return 3446
+        elif dst > self.rmax:
+            return 585
+        else:
+            value = np.polyval(self.ir_coeff,dst)
+            valueWithNoise = self.add_gauss_noise(value,global_val.ir_sigma_deviation)
+            return  valueWithNoise
+
+    def compute_ir_coeff(self):
+
+        x = np.array([x*1.0/100 for x in range(8,81) if x%2==0])#Distance
+        y = np.array([2.752, 2.3,    2.275, 1.8,
+                      1.589, 1.445,  1.3,   1.22,
+                      1.121, 1.075,  0.95,  0.9314,
+                      0.9,   0.8725, 0.825, 0.78,
+                      0.735, 0.714,  0.69,  0.667,
+                      0.625, 0.6,    0.59,  0.584,
+                      0.565, 0.525,  0.511, 0.5,
+                      0.497, 0.48,   0.45,  0.44,
+                      0.43,  0.42,   0.41,  0.405,
+                      0.4]) #Analog voltage output
+        coeff = np.array([x*4095/3 for x in np.polyfit(x, y, 3)])
+        return coeff
