@@ -292,14 +292,20 @@ class QuickBot(Robot):
     def get_sonar_sensors(self):
         return self.sonar_sensors
 
-    def draw_sensors(self,renderer):
+    def draw_ir_sensors(self,renderer):
         """Draw the sensors that this robot has"""
         for sensor in self.ir_sensors:
             sensor.draw(renderer)
 
+
+    def draw_all_sonar_sensors(self,renderer):
         for sensor in self.sonar_sensors:
             sensor.draw(renderer)
-            
+
+    def draw_half_sonar_sensors(self,renderer):
+        for sensor in self.sonar_sensors[:len(self.sonar_sensors)/2]:
+            sensor.draw(renderer)
+
     def update_sensors(self):
         for sensor in self.ir_sensors:
             sensor.update_distance()

@@ -53,6 +53,7 @@ class Simulator(threading.Thread):
         self.__center_on_robot = False
         self.__orient_on_robot = False
         self.__show_sensors = True
+        self.__show_all_sonar_sensors = True
         self.__draw_supervisors = False
         self.__show_tracks = True
         self._server = None
@@ -271,7 +272,12 @@ class Simulator(threading.Thread):
         for robot in self.__robots:
             robot.draw(self.__renderer)
             if self.__show_sensors:
-                robot.draw_sensors(self.__renderer)
+                robot.draw_ir_sensors(self.__renderer)
+
+            if self.__show_all_sonar_sensors:
+                robot.draw_all_sonar_sensors(self.__renderer)
+            else:
+                robot.draw_half_sonar_sensors(self.__renderer)
 
 
 
@@ -333,6 +339,12 @@ class Simulator(threading.Thread):
         """Show or hide the robots' sensors on the simulation view
         """
         self.__show_sensors = show
+        self.__draw_once()
+
+    def show_sonar_sensors(self, show = True):
+        """Show or hide the robots' sonar sensors on the simulation view
+        """
+        self.__show_all_sonar_sensors = show
         self.__draw_once()
 
     def show_tracks(self, show = True):
