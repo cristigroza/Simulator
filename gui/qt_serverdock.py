@@ -12,6 +12,7 @@ class ServerDock(QtGui.QDockWidget):
     robot_changed = pyqtSignal(str,float,float,float)
     apply_robot_settings = pyqtSignal(float,float,float)
     start_server_request = pyqtSignal(str,str)
+    stop_server_request = pyqtSignal(str,str)
     closed = pyqtSignal(bool)
     show_server_log = pyqtSignal(bool)
 
@@ -103,10 +104,12 @@ class ServerDock(QtGui.QDockWidget):
 
     def start_server_clicked(self):
         #self.btn_start.setEnabled(False)
-        self.start_server_request.emit(self.ipAddress.text(),self.port.text())
+
         if self.robotsGroup.isEnabled():
+            self.start_server_request.emit(self.ipAddress.text(),self.port.text())
             self.btn_start.setText("Stop server")
         else:
+            self.stop_server_request.emit(self.ipAddress.text(),self.port.text())
             self.btn_start.setText("Start server")
         self.robotsGroup.setEnabled(not self.robotsGroup.isEnabled())
 

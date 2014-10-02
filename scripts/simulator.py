@@ -360,6 +360,9 @@ class Simulator(threading.Thread):
     def start_server(self,ipAddress, port):
         self._sim_server.run(ipAddress,port)
 
+    def stop_server(self,ipAddress, port):
+        self._sim_server.stop(ipAddress,port)
+
     def show_server_log(self, show):
         self._sim_server.set_server_log(show)
 
