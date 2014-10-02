@@ -1,5 +1,6 @@
 import sys
 import threading
+import socket
 from server import Server
 import sim_server_helpers
 
@@ -66,7 +67,13 @@ class SimServer:
             self._server_thread.start()
         else:
             self.log("Server is running...")
-            self._server_thread.run_server = False
+
+
+    def stop(self,ipAddress, port):
+        self._server_thread.run_server = False
+        temp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        temp_socket.connect( (ipAddress, int(port)))
+        temp_socket.close()
 
     time_constant = 0.02 # 20 milliseconds
 

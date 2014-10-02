@@ -295,6 +295,7 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
         if self.server_dock is None:
             self.server_dock = ServerDock(self)
             self.server_dock.start_server_request.connect(self.on_start_server)
+            self.server_dock.stop_server_request.connect(self.on_stop_server)
             self.server_dock.show_server_log.connect(self.on_show_server_log)
             self.server_dock.robot_changed.connect(self.on_robot_changed)
             self.server_dock.apply_robot_settings.connect(self.on_apply_robot_settings)
@@ -412,6 +413,9 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
 
     def on_start_server(self,ipAddress, port):
         self.run_simulator_command('start_server',ipAddress,port)
+
+    def on_stop_server(self,ipAddress, port):
+        self.run_simulator_command('stop_server',ipAddress,port)
 
     def on_show_server_log(self,show):
             self.run_simulator_command('show_server_log',show)

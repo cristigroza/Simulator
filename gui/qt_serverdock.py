@@ -45,10 +45,6 @@ class ServerDock(QtGui.QDockWidget):
         vl.addWidget(communicationPanel)
         vl.addWidget(communicationGroup)
 
-
-
-
-
         self.ipAddress = QtGui.QLineEdit('127.0.0.1',self)
         self.port = QtGui.QLineEdit('10001',self)
         self.btn_start = QtGui.QPushButton('Start server',self)
@@ -108,7 +104,11 @@ class ServerDock(QtGui.QDockWidget):
     def start_server_clicked(self):
         #self.btn_start.setEnabled(False)
         self.start_server_request.emit(self.ipAddress.text(),self.port.text())
-        self.robotsGroup.setEnabled(False)
+        if self.robotsGroup.isEnabled():
+            self.btn_start.setText("Stop server")
+        else:
+            self.btn_start.setText("Start server")
+        self.robotsGroup.setEnabled(not self.robotsGroup.isEnabled())
 
     def show_server_log_clicked(self):
         self.show_server_log.emit(self.ckBox_show_server_log.isChecked())
