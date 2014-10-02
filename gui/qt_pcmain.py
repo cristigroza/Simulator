@@ -161,7 +161,7 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
         self.sens_action.setChecked(True)
 
         self.sonar_sens_action = \
-            QtGui.QAction(QtGui.QIcon("./res/image/robot-sensors.png"),
+            QtGui.QAction(QtGui.QIcon("./res/image/robot-sonar-sensors.png"),
                           "Show/hide robot sonar sensors", self)
         self.sonar_sens_action.setStatusTip("Show/hide robot sonar sensors")
         self.sonar_sens_action.triggered[bool].connect(self.show_sonar_sensors)
