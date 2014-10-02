@@ -19,6 +19,7 @@ class Server(threading.Thread):
         self._in_server_queue = in_server_queue
         self.init_socket()
         self.show_log = True
+        self.run_server = True
 
     def init_socket(self):
          self._sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -34,24 +35,38 @@ class Server(threading.Thread):
         self._port = port
 
     def run(self):
-        try:
-            self.server_address = (self._ipAddress, self._port)
-            self.log('Starting up on %s port %s' % self.server_address )
-            self._sock.bind(self.server_address)
-            self._sock.listen(1)
-            self.log('Waiting for a connection...')
-            self._connection, self._client_address = self._sock.accept()
-            self.log('Connection form {}'.format(self._client_address))
-        except Exception as e:
-            self.log("EXCEPTION: {}".format(sys.exc_info()))
-            self._sock.close()
-            self.init_socket()
-            self.log("Socked closed")
-            return
-        self.listen()
+        self._run()
+
+    def reset(self):
+        self._run()
+
+    def _run(self):
+        while self.run_server:
+            try:
+                self.server_address = (self._ipAddress, self._port)
+                self.log('Starting up on %s port %s' % self.server_address )
+                self._sock.bind(self.server_address)
+                self._sock.listen(1)
+                self.log('Waiting for a connection...')
+                self._connection, self._client_address = self._sock.accept()
+                self.log('Connection form {}'.format(self._client_address))
+            except Exception as e:
+                self.log("EXCEPTION: {}".format(sys.exc_info()))
+                self._sock.close()
+                self.init_socket()
+                self.log("Socked closed")
+                return
+
+            try:
+                self.listen()
+            except Exception as e:
+                self.log("EXCEPTION: {}".format(sys.exc_info()))
+                self._sock.close()
+                self.init_socket()
+
 
     def listen(self):
-        while True:
+        while self.run_server:
             self.receive()
             while not self._out_server_queue.empty() or self._in_server_queue.empty():
                 sleep(0.02)

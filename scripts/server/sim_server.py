@@ -17,9 +17,12 @@ class SimServer:
         self._tracker = tracker
         self._logqueue = log_queue
         self._out_server_queue = queue.Queue()
-        self._server_thread = Server(self._out_server_queue, log_queue)
-        self._in_server_queue = self._server_thread.getOutQueue()
+        self.init_server()
         self._simParent = simParent
+
+    def init_server(self):
+        self._server_thread = Server(self._out_server_queue, self._logqueue)
+        self._in_server_queue = self._server_thread.getOutQueue()
 
     def set_robot(self, robot):
         self._robot = robot
@@ -53,19 +56,36 @@ class SimServer:
 
 
     def run(self, ipAddress, port):
+        if not self._server_thread.run_server:
+            self._server_thread._sock.close()
+            self.init_server()
+
         if not self._server_thread.isAlive():
             self._server_thread.setIpAddress(ipAddress)
             self._server_thread.setPort(int(port))
             self._server_thread.start()
         else:
             self.log("Server is running...")
+            self._server_thread.run_server = False
+
     time_constant = 0.02 # 20 milliseconds
+
     def DcMotorPositionTimeCtrAll(self, left_wheel, right_wheel, run_time):
         vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_ticks, run_time)
         vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_ticks, run_time)
 
         self._robot.info.wheels.left_ticks = left_wheel
         self._robot.info.wheels.right_ticks = right_wheel
+        self.robot_move(vl,vr, run_time)
+        self._out_server_queue.put("Done.")
+
+    def DcMotorPwmTimeCtrAll(self, left_wheel_pwm_command, right_wheel_pwm_command, run_time):
+        vl = self.helpers.convertPWMToVelocity(self._robot, left_wheel_pwm_command)
+        vr = self.helpers.convertPWMToVelocity(self._robot, right_wheel_pwm_command)
+        self.robot_move(vl,vr,run_time)
+        self._out_server_queue.put("Done.")
+
+    def robot_move(self,vl,vr,run_time):
         nrRuns = int(run_time/self.time_constant)
 
         for x in range(0, nrRuns):
@@ -76,7 +96,7 @@ class SimServer:
             self._simParent.check_collisions()
             self._simParent.draw()
 
-        self._out_server_queue.put("Done.")
+
 
     def get_ir_sensor_readings(self, ir_sensor_id):
         info = self._robot.get_info()
