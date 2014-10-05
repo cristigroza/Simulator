@@ -141,7 +141,7 @@ class x80(QuickBot):
                           Pose(0.085 + 0.115*cos(radians(45)), -0.2*sin(radians(45)), np.radians(-45)),
                           ],x80_SonarSensor)
 
-        self.wheels_color = sim_server_helpers.Colors.Wheels
+
         self.base_plate_color = 0x66CC0000
         self.head_color = 0x66CC0000
         self.upper_plate_color = 0xF6CCCCCC
@@ -150,8 +150,10 @@ class x80(QuickBot):
         self.info.wheels.base_length = 0.26 # distance between the wheels
         self.info.wheels.ticks_per_rev = 1200
         self.info.wheels.max_encoder_buffer_value = 32767
+        self.info.wheels.perimeter = self.info.wheels.radius * 2 * pi
 
-        self.info.wheels.max_velocity = 60 / ( 2 * pi * self.info.wheels.radius) # 116 RPM,1m/s
+        self.info.wheels.max_velocity_ms = 1#m/s
+        self.info.wheels.max_velocity = 60 * self.info.wheels.max_velocity_ms / ( 2 * pi * self.info.wheels.radius) #RPM
         #self.info.wheels.min_velocity = 2*pi*30/60  #  30 RPM
 
         self.info.ir_sensors.rmax = 0.8

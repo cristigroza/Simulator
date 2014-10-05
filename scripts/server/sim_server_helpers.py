@@ -78,12 +78,23 @@ def gen_poly_coeff_v2(max_pwm,min_pwm, max_rpm):
     coeff = np.array([x for x in np.polyfit(pwm, rpm, 6)])
     return coeff
 
+def convertVelocityToRobotTicks(velocity, time, current_pos, robot_info):
+    max_encoder_value = robot_info.wheels.max_encoder_buffer_value
+    ticks_per_rev = robot_info.wheels.ticks_per_rev
+    perimeter = robot_info.wheels.perimeter
+    distance = velocity * time
+    ticks = distance * ticks_per_rev / perimeter
+    ticks = math.copysign(1.,ticks) * math.fabs(ticks) % max_encoder_value
+    current_pos += ticks
 
+    if current_pos < 0:
+        current_pos += max_encoder_value
+    if current_pos > max_encoder_value:
+        current_pos -= max_encoder_value
 
-class Colors:
+    return current_pos
+
+'''class Colors:
     IrSensors = 0xA32900
     BasePlate = 0x55AAEE
-    Wheels = 0x000000
-x=3.58
-print(x*43/8.89)
-print("Half:" + str((x*43/8.89)/2))
+    Wheels = 0x000000'''

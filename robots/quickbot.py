@@ -131,8 +131,8 @@ class QuickBot(Robot):
         self.info.sonar_sensors.rmax = 2.54
         self.info.sonar_sensors.rmin = 0.05
 
-        self.wheels_color = sim_server_helpers.Colors.Wheels
-        self.base_plate_color = sim_server_helpers.Colors.BasePlate
+        self.wheels_color = 0x000000
+        self.base_plate_color = 0x55AAEE
         self.upper_plate_color = None
         self.upper_plate_front_color = None
         self.upper_plate_back_color = None

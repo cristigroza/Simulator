@@ -160,6 +160,14 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
         self.sens_action.setCheckable(True)
         self.sens_action.setChecked(True)
 
+        self.sonar_sens_action = \
+            QtGui.QAction(QtGui.QIcon("./res/image/robot-sonar-sensors.png"),
+                          "Show/hide robot sonar sensors max wave range", self)
+        self.sonar_sens_action.setStatusTip("Show/hide robot sonar sensors")
+        self.sonar_sens_action.triggered[bool].connect(self.show_sonar_sensors)
+        self.sonar_sens_action.setCheckable(True)
+        self.sonar_sens_action.setChecked(True)
+
         self.trace_action = \
             QtGui.QAction(QtGui.QIcon("./res/image/robot-tracks.png"),
                           "Show/Hide robot trajectores", self)
@@ -217,6 +225,7 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
 
         self.view_toolbar.addAction(self.grid_action)        
         self.view_toolbar.addAction(self.sens_action)
+        self.view_toolbar.addAction(self.sonar_sens_action)
         self.view_toolbar.addAction(self.trace_action)
 
         self.view_toolbar.addSeparator()
@@ -263,6 +272,7 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
         
         view_menu.addAction(self.grid_action)
         view_menu.addAction(self.sens_action)
+        view_menu.addAction(self.sonar_sens_action)
         view_menu.addAction(self.trace_action)
         
     def create_statusbar(self):      
@@ -362,7 +372,11 @@ class SimulationWidget(SimUI, QtGui.QMainWindow):
     @QtCore.pyqtSlot(bool)
     def show_sensors(self,show):
         self.run_simulator_command('show_sensors',show)
-            
+
+    @QtCore.pyqtSlot(bool)
+    def show_sonar_sensors(self,show):
+        self.run_simulator_command('show_sonar_sensors',show)
+
     @QtCore.pyqtSlot(bool)
     def show_tracks(self,show):
         self.run_simulator_command('show_tracks',show)
