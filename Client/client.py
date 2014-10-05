@@ -34,18 +34,18 @@ class Client:
             self.send_and_receive('getRightWheelEncoderValue;')
 
     def read_sensors(self):
-        self.send_and_receive('getIR1;')
-        self.send_and_receive('getIR2;')
-        self.send_and_receive('getIR3;')
-        self.send_and_receive('getIR4;')
-        self.send_and_receive('getIR5;')
-        self.send_and_receive('getIR6;')
-        self.send_and_receive('getIR7;')
+        self.send_and_receive('GetIR1;')
+        self.send_and_receive('GetIR2;')
+        self.send_and_receive('GetIR3;')
+        self.send_and_receive('GetIR4;')
+        self.send_and_receive('GetIR5;')
+        self.send_and_receive('GetIR6;')
+        self.send_and_receive('GetIR7;')
 
 
-        self.send_and_receive('getSonar1;')
-        self.send_and_receive('getSonar2;')
-        self.send_and_receive('getSonar3;')
+        self.send_and_receive('GetSensorSonar1;')
+        self.send_and_receive('GetSensorSonar2;')
+        self.send_and_receive('GetSensorSonar3;')
 
     def send_and_receive(self,message):
         print('sending %s' % message)

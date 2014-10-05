@@ -70,19 +70,21 @@ class DRK8080(QuickBot):
 
                           ],DRK8080_SonarSensor)
         
-        self.wheels_color = sim_server_helpers.Colors.Wheels
+
         self.base_plate_color = 0xB655AAEE
         # these were the original parameters
-        self.info.wheels.radius = 0.085
-        self.info.wheels.base_length = 0.3 # distance between the wheels
-        self.info.wheels.ticks_per_rev = 1200
+        self.info.wheels.radius = 0.035
+        self.info.wheels.base_length = 0.3 #???????????? # distance between the wheels
+        self.info.wheels.ticks_per_rev = 1200 #????????????
         self.info.wheels.max_encoder_buffer_value = 4428
+        self.info.wheels.perimeter = self.info.wheels.radius * 2 * pi
 
-        self.info.wheels.max_velocity = 2*pi*130/60 # 130 RPM
-        self.info.wheels.min_velocity = 2*pi*30/60  #  30 RPM
+        self.info.wheels.max_velocity_ms = 0.15 #m/s
+        self.info.wheels.max_velocity = 60 * self.info.wheels.max_velocity_ms / ( 2 * pi * self.info.wheels.radius) # RPM
+        #self.info.wheels.min_velocity = 2*pi*30/60  #  30 RPM
 
-        self.info.ir_sensors.rmax = 0.8
-        self.info.ir_sensors.rmin = 0.1
+        #self.info.ir_sensors.rmax = 0.8
+        #self.info.ir_sensors.rmin = 0.1
 
         self.info.sonar_sensors.rmax = 2.54
         self.info.sonar_sensors.rmin = 0.05

@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace Simulator.Client
 {
-    public class Communication
+    class Communication
     {
         private readonly StreamWriter _streamWriter;
         private readonly StreamReader _streamReader;
         public Communication()
         {
-            //TODO Use MEF to descover server configurations
-            var tcpClient = new TcpClient(Configuration.ServerIp, Configuration.ServerPort);
+            var tcpClient = new TcpClient(RobotConfiguration.ServerIp, RobotConfiguration.ServerPort);
             var networkStream = tcpClient.GetStream();
             _streamWriter = new StreamWriter(networkStream) { AutoFlush = true };
             _streamReader = new StreamReader(networkStream);
@@ -28,10 +27,11 @@ namespace Simulator.Client
 
         public string GetCommand()
         {
-
-            var ret = _streamReader.ReadLine() ?? string.Empty;
-            ret = (ret.Length > 1 ? ret.Substring(0, ret.Length - 1) : ret).ToLower();
-            return ret;
+    
+            var buffer =  new char[1024];
+            var ret = _streamReader.Read(buffer,0,1024);
+          
+            return ret.ToString();
         }
 
     }

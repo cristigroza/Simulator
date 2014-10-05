@@ -89,6 +89,10 @@ class SimServer:
     def DcMotorPwmTimeCtrAll(self, left_wheel_pwm_command, right_wheel_pwm_command, run_time):
         vl = self.helpers.convertPWMToVelocity(self._robot, left_wheel_pwm_command)
         vr = self.helpers.convertPWMToVelocity(self._robot, right_wheel_pwm_command)
+
+        self._robot.info.wheels.left_ticks = self.helpers.convertVelocityToRobotTicks(vl, run_time, self._robot.info.wheels.left_ticks, self._robot.info)
+        self._robot.info.wheels.right_ticks = self.helpers.convertVelocityToRobotTicks(vr, run_time, self._robot.info.wheels.right_ticks, self._robot.info)
+
         self.robot_move(vl,vr,run_time)
         self._out_server_queue.put("Done.")
 
@@ -119,50 +123,50 @@ class SimServer:
     def getRightWheelEncoderValue(self):
         self._out_server_queue.put(self._robot.info.wheels.right_ticks)
     #IR
-    def getIR1(self):
+    def GetIR1(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(0))
 
-    def getIR2(self):
+    def GetIR2(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(1))
 
-    def getIR3(self):
+    def GetIR3(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(2))
 
-    def getIR4(self):
+    def GetIR4(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(3))
 
-    def getIR5(self):
+    def GetIR5(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(4))
 
-    def getIR6(self):
+    def GetIR6(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(5))
 
-    def getIR7(self):
+    def GetIR7(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(6))
 
-    def getIR8(self):
+    def GetIR8(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(7))
 
-    def getIR9(self):
+    def GetIR9(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(8))
 
     #Sonsr
-    def getSonar1(self):
+    def GetSensorSonar1(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(0))
 
-    def getSonar2(self):
+    def GetSensorSonar2(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(1))
 
-    def getSonar3(self):
+    def GetSensorSonar3(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(2))
 
-    def getSonar4(self):
+    def GetSensorSonar4(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(3))
 
-    def getSonar5(self):
+    def GetSensorSonar5(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(4))
 
-    def getSonar6(self):
+    def GetSensorSonar6(self):
         self._out_server_queue.put(self.get_sonar_sensor_readings(5))
 
     def log(self, message):
