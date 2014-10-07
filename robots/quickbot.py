@@ -17,7 +17,7 @@ import sim_server_helpers
 class QuickBot_IRSensor(ProximitySensor):
     """Inherits from the proximity sensor class. Performs calculations specific to the khepera3 for its characterized proximity sensors"""
     
-    ir_coeff = sim_server_helpers.compute_x80_ir_coeff()
+    ir_coeff = sim_server_helpers.compute_ir_coeff()
     
     def __init__(self,pose,robot):
         # values copied from SimIAm    

@@ -13,16 +13,16 @@ namespace Simulator.Client
         /// Left wheel encoder value.
         ///</summary>
         short GetEncoderPulse1();
+        short GetSensorPot1();
 
         ///<summary>
         /// Right wheel encoder value.
         ///</summary>
         short GetEncoderPulse2();
+        short GetSensorPot2();
 
         #endregion
 
-        //TODO Test if the parameters match the wheels control on the robot
-        void DcMotorPwmTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod);
         void DcMotorPositionTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod);
 
         #region Sonars
@@ -49,12 +49,10 @@ namespace Simulator.Client
         ///<summary>
         /// Left
         ///</summary>
-        short GetCustomAD1();
         short GetCustomAD8();
         ///<summary>
         /// Left down
         ///</summary>
-        short GetCustomAD2();
         short GetSensorIRRange();
         ///<summary>
         /// Left up

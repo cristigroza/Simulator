@@ -86,15 +86,7 @@ class SimServer:
         self.robot_move(vl,vr, run_time)
         self._out_server_queue.put("Done.")
 
-    def DcMotorPwmTimeCtrAll(self, left_wheel_pwm_command, right_wheel_pwm_command, run_time):
-        vl = self.helpers.convertPWMToVelocity(self._robot, left_wheel_pwm_command)
-        vr = self.helpers.convertPWMToVelocity(self._robot, right_wheel_pwm_command)
 
-        self._robot.info.wheels.left_ticks = self.helpers.convertVelocityToRobotTicks(vl, run_time, self._robot.info.wheels.left_ticks, self._robot.info)
-        self._robot.info.wheels.right_ticks = self.helpers.convertVelocityToRobotTicks(vr, run_time, self._robot.info.wheels.right_ticks, self._robot.info)
-
-        self.robot_move(vl,vr,run_time)
-        self._out_server_queue.put("Done.")
 
     def robot_move(self,vl,vr,run_time):
         nrRuns = int(run_time/self.time_constant)

@@ -25,15 +25,20 @@ namespace Simulator.Client
         public short GetEncoderPulse2()
         {
             return _command.Value.GetEncoderPulse2();
+        } 
+        public short GetSensorPot1()
+        {
+            return _command.Value.GetSensorPot1();
+        }
+
+        public short GetSensorPot2()
+        {
+            return _command.Value.GetSensorPot2();
         }
         #endregion
 
         #region Motor control
-        public void DcMotorPwmTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod)
-        {
-            _command.Value.DcMotorPwmTimeCtrAll(leftWheel, rightWheel, cmd3, cmd4, cmd5, cmd6, timePeriod);
-        }
-
+      
         public void DcMotorPositionTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod)
         {
             _command.Value.DcMotorPositionTimeCtrAll(leftWheel, rightWheel, cmd3, cmd4, cmd5, cmd6, timePeriod);
@@ -74,21 +79,14 @@ namespace Simulator.Client
         #endregion
 
         #region IR
-        public short GetCustomAD1()
-        {
-            return _command.Value.GetCustomAD1();
-        }
+     
 
         public short GetCustomAD8()
         {
             return _command.Value.GetCustomAD8();
         }
 
-        public short GetCustomAD2()
-        {
-            return _command.Value.GetCustomAD2();
-        }
-
+       
         public short GetSensorIRRange()
         {
             return _command.Value.GetSensorIRRange();

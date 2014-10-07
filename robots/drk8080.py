@@ -74,8 +74,8 @@ class DRK8080(QuickBot):
         self.base_plate_color = 0xB655AAEE
         # these were the original parameters
         self.info.wheels.radius = 0.035
-        self.info.wheels.base_length = 0.3 #???????????? # distance between the wheels
-        self.info.wheels.ticks_per_rev = 1200 #????????????
+        self.info.wheels.base_length = 0.13 # distance between the wheels
+        self.info.wheels.ticks_per_rev = 4428 #????????????
         self.info.wheels.max_encoder_buffer_value = 4428
         self.info.wheels.perimeter = self.info.wheels.radius * 2 * pi
 
