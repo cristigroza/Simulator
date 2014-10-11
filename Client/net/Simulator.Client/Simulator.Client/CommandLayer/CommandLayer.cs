@@ -20,8 +20,20 @@ namespace Simulator.Client.CommandLayer
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
+        public virtual short GetSensorPot1() //For DRK8080
+        {
+            communication.SendCommand("getLeftWheelEncoderValue;");
+            var ret = communication.GetCommand();
+            return Int16.Parse(ret);
+        }
 
         public virtual short GetEncoderPulse2()
+        {
+            communication.SendCommand("getRightWheelEncoderValue;");
+            var ret = communication.GetCommand();
+            return Int16.Parse(ret);
+        }
+        public virtual short GetSensorPot2()//For DRK8080
         {
             communication.SendCommand("getRightWheelEncoderValue;");
             var ret = communication.GetCommand();
@@ -31,11 +43,7 @@ namespace Simulator.Client.CommandLayer
         #endregion
 
         #region Motors
-        public virtual void DcMotorPwmTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod)
-        {
-            communication.SendCommand(string.Format("DcMotorPwmTimeCtrAll;{0};{1};{2}", leftWheel, rightWheel, timePeriod / 1000));
-            communication.GetCommand();
-        }
+    
 
         public virtual void DcMotorPositionTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod)
         {
@@ -89,68 +97,63 @@ namespace Simulator.Client.CommandLayer
         #endregion
 
         #region IR
-        public virtual short GetCustomAD1()
-        {
-            communication.SendCommand("GetIR1;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
+       
 
-        public virtual short GetCustomAD8()
-        {
-            communication.SendCommand("GetIR1;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
-
-        public virtual short GetCustomAD2()
-        {
-            communication.SendCommand("GetIR2;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
 
         public virtual short GetSensorIRRange()
         {
-            communication.SendCommand("GetIR2;");
+            communication.SendCommand("GetIR1;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public virtual short GetCustomAD3()
         {
-            communication.SendCommand("GetIR3;");
+            communication.SendCommand("GetIR2;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public virtual short GetCustomAD4()
         {
-            communication.SendCommand("GetIR4;");
+            communication.SendCommand("GetIR3;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public virtual short GetCustomAD5()
         {
-            communication.SendCommand("GetIR5;");
+            communication.SendCommand("GetIR4;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public virtual short GetCustomAD6()
         {
-            communication.SendCommand("GetIR6;");
+            communication.SendCommand("GetIR5;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public virtual short GetCustomAD7()
         {
+            communication.SendCommand("GetIR6;");
+            var ret = communication.GetCommand();
+            return Int16.Parse(ret);
+        }
+
+
+       
+        public virtual short GetCustomAD8()
+        {
             communication.SendCommand("GetIR7;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
-        } 
+        }
+
+       
+
+
         #endregion
     }
 }

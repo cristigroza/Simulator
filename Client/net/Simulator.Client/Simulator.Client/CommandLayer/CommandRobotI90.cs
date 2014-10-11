@@ -8,6 +8,19 @@ namespace Simulator.Client.CommandLayer
 {
     class CommandRobotI90 : CommandLayer
     {
+        #region Encoders
+        public override short GetSensorPot1()
+        {
+            return 0;
+        }
+
+        public override short GetSensorPot2()
+        {
+            return 0;
+        }
+        
+        #endregion
+
         #region Sonars
         public override short GetSensorSonar4()
         {

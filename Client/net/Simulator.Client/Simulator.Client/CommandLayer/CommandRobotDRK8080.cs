@@ -9,28 +9,35 @@ namespace Simulator.Client.CommandLayer
     class CommandRobotDRK8080 : CommandLayer
     {
 
+        #region Encoders
+        public override short GetEncoderPulse1()
+        {
+            return 0;
+        }
+
+        public override short GetEncoderPulse2()
+        {
+            return 0;
+        }
+
+        #endregion
+
         #region Sonars
         public override short GetSensorSonar6()
         {
-            return -1;
+            return 255;
         }  
         #endregion
 
         #region IR
-        public override short GetCustomAD1()
-        {
-            return -1;
-        }
+      
 
         public override short GetCustomAD8()
         {
             return -1;
         }
 
-        public override short GetCustomAD2()
-        {
-            return -1;
-        }
+      
 
         public override short GetSensorIRRange()
         {

@@ -121,13 +121,13 @@ class x80(QuickBot):
 
 
         self.set_ir_sensor_poses([
-                          Pose( 0, 0.2, np.radians(90)),
                           Pose( 0.085 + 0.115*cos(radians(30)), 0.2*sin(radians(30)), np.radians(30)),
                           Pose( 0.085 + 0.115*cos(radians(12)), 0.2*sin(radians(12)), np.radians(12)),
                           Pose( -0.2, 0.0, np.radians(180)),
                           Pose( 0.085 + 0.115*cos(radians(12)), -0.2*sin(radians(12)), np.radians(-12)),
                           Pose(0.085 + 0.115*cos(radians(30)), -0.2*sin(radians(30)), np.radians(-30)),
-                          Pose( 0,-0.2, np.radians(-90))
+                          Pose( 0,-0.2, np.radians(-90)),
+                          Pose( 0, 0.2, np.radians(90)),
                           ],x80_IRSensor)
 
         self.set_sonar_sensor_poses([

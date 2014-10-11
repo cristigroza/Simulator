@@ -46,41 +46,9 @@ namespace Simulator.Client.Tests
             _robot.DcMotorPositionTimeCtrAll(10000, 0, 0, 0, 0, 0, 1000);
         }
 
-
-
-        [Test]
-        public void Move_Robt_Forward_Using_PWMTImeCtrl()
-        {
-            _robot.DcMotorPwmTimeCtrAll(32000, 32000, 0, 0, 0, 0, 1000);
-        }
-
-        [Test]
-        public void Move_Robot_Backwards_Using_PWMTImeCtrl()
-        {
-
-            _robot.DcMotorPwmTimeCtrAll(16000, 16000, 0, 0, 0, 0, 1000);
-        }
-
-        [Test]
-        public void Rotate_Robot_To_Left_Using_PWMTImeCtrl()
-        {
-            _robot.DcMotorPwmTimeCtrAll(0, 32000, 0, 0, 0, 0, 1000);
-        }
-
-        [Test]
-        public void Rotate_Robot_To_Right_Using_PWMTImeCtrl()
-        {
-            _robot.DcMotorPwmTimeCtrAll(32000, 0, 0, 0, 0, 0, 1000);
-        }
-
-
-
         [Test]
         public void Read_Robot_Ir_Senfors()
         {
-
-            _robot.GetCustomAD1();
-            _robot.GetCustomAD2();
             _robot.GetCustomAD3();
             _robot.GetCustomAD4();
             _robot.GetCustomAD5();

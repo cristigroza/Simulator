@@ -9,6 +9,19 @@ namespace Simulator.Client.CommandLayer
     class CommandRobotX80H : CommandLayer
     {
 
+        #region Encoders
+        public override short GetSensorPot1()
+        {
+            return 0;
+        }
+
+        public override short GetSensorPot2()
+        {
+            return 0;
+        }
+
+        #endregion
+
         #region Sonars
         public override short GetSensorSonar4()
         {
@@ -27,72 +40,56 @@ namespace Simulator.Client.CommandLayer
         #endregion
 
         #region IR
-        public override short GetCustomAD1()
-        {
-            communication.SendCommand("GetIR1;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
-
-        public override short GetCustomAD8()
-        {
-            communication.SendCommand("GetIR1;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
-
-
-        /// <summary>
-        /// Defect
-        /// </summary>
-        /// <returns>-1</returns>
-
-        public override short GetCustomAD2()
-        {
-            communication.SendCommand("GetIR2;");
-            var ret = communication.GetCommand();
-            return Int16.Parse(ret);
-        }
-
         public override short GetSensorIRRange()
         {
-            communication.SendCommand("GetIR2;");
+            communication.SendCommand("GetIR1;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
-
+        //Defect
         public override short GetCustomAD3()
         {
-            return -1;
+            return 3200;
         }
 
         public override short GetCustomAD4()
         {
-            communication.SendCommand("GetIR3;");
+            communication.SendCommand("GetIR2;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public override short GetCustomAD5()
         {
-            communication.SendCommand("GetIR4;");
+            communication.SendCommand("GetIR3;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public override short GetCustomAD6()
         {
-            communication.SendCommand("GetIR5;");
+            communication.SendCommand("GetIR4;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
         }
 
         public override short GetCustomAD7()
         {
+            communication.SendCommand("GetIR5;");
+            var ret = communication.GetCommand();
+            return Int16.Parse(ret);
+        }
+
+
+
+        public override short GetCustomAD8()
+        {
             communication.SendCommand("GetIR6;");
             var ret = communication.GetCommand();
             return Int16.Parse(ret);
-        } 
+        }
+
+     
         #endregion
     }
 }

@@ -98,13 +98,13 @@ class i90(QuickBot):
 
         self.set_ir_sensor_poses([
                           Pose( 0.1493, 0.19, np.radians(90)),
-                          Pose( 0.1843, 0.1729, np.radians(45)),
+                          #Pose( 0.1843, 0.1729, np.radians(45)),
                           Pose( 0.2083, 0.1359, np.radians(20)),
                           Pose( 0.215, 0.08658, np.radians(0)),
                           Pose( 0.215, 0.0, np.radians(0)),
                           Pose( 0.215, -0.08658, np.radians(0)),
                           Pose( 0.2083 , -0.1359, np.radians(-20)),
-                          Pose( 0.1843, -0.1729, np.radians(-45)),
+                          #Pose( 0.1843, -0.1729, np.radians(-45)),
                           Pose( 0.1493, -0.19, np.radians(-90))
                           ],i90_IRSensor)
 
