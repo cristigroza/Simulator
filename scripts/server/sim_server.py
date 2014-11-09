@@ -78,6 +78,8 @@ class SimServer:
     time_constant = 0.02 # 20 milliseconds
 
     def DcMotorPositionTimeCtrAll(self, left_wheel, right_wheel, run_time):
+        left_wheel = self.helpers.limitValue(self._robot, left_wheel)
+        right_wheel = self.helpers.limitValue(self._robot, right_wheel)
         vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_ticks, run_time)
         vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_ticks, run_time)
 

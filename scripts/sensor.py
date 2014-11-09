@@ -171,15 +171,24 @@ class SonarSensor(ProximitySensor):
             else: min_distance = distance
         return min_distance
 
-     def distance_to_value(self,dst):
+     def _limit_dst(self,dst):
+        if dst > 254:
+            return 254
+        elif dst < 4:
+            return 4
+        else:
+            return dst
+
+     def distance_to_value(self,dst_in_m):
         """Returns the distance calculation from the distance readings of the proximity sensors"""
 
-        if dst < self.rmin :
+        if dst_in_m < self.rmin :
             return 4
-        elif dst > self.rmax:
+        elif dst_in_m > self.rmax:
             return 254
         else:
-            return self.add_gauss_noise(dst * 100, global_val.sonar_sigma_deviation)
+             dst_in_cm = self.add_gauss_noise(dst_in_m * 100, global_val.sonar_sigma_deviation)
+             return self._limit_dst(dst_in_cm)
 
 
 class IRSensor(ProximitySensor):
@@ -191,6 +200,19 @@ class IRSensor(ProximitySensor):
         ProximitySensor.__init__(self, pose, robot, geometry)
         self.ir_coeff = self.compute_ir_coeff()
 
+    def _distance2ival(self, dst):
+        value = np.polyval(self.ir_coeff,dst)
+        valueWithNoise = self.add_gauss_noise(value,global_val.ir_sigma_deviation)
+        return valueWithNoise
+
+    def _limit_ival(self, ival):
+        if ival > 3446:
+            return 3446
+        elif ival < 585:
+            return 585
+        else:
+            return ival
+
     def distance_to_value(self,dst):
         """Returns the distance calculation from the distance readings of the proximity sensors"""
 
@@ -199,9 +221,8 @@ class IRSensor(ProximitySensor):
         elif dst > self.rmax:
             return 585
         else:
-            value = np.polyval(self.ir_coeff,dst)
-            valueWithNoise = self.add_gauss_noise(value,global_val.ir_sigma_deviation)
-            return  valueWithNoise
+            ival = self._distance2ival(dst)
+            return self._limit_ival(ival)
 
     def compute_ir_coeff(self):
 

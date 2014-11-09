@@ -116,8 +116,8 @@ namespace Simulator.Client.Tests
                 right = _robot.GetSensorPot2();
                 
 
-                left += 3000;
-                right += 3000;
+                left += 2000;
+                right += 2000;
 
                 _robot.DcMotorPositionTimeCtrAll((short)left, (short)right, 0, 0, 0, 0, 1000);
             }

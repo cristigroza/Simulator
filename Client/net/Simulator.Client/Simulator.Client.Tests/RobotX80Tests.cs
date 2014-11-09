@@ -89,9 +89,10 @@ namespace Simulator.Client.Tests
                 //                right = _robot.GetSensorPot2();
                 left = _robot.GetEncoderPulse1();
                 right = _robot.GetEncoderPulse2();
-
-                left += 200;
-                right += 200;
+                this.Read_Robot_Ir_Senfors();
+                this.Read_Robot_Sonar_Sensors();
+                left += 10000;
+                right += 10000;
 
                 _robot.DcMotorPositionTimeCtrAll((short)left, (short)right, 0, 0, 0, 0, 1000);
             }

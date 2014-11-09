@@ -16,7 +16,14 @@ def computeRotation(max_encoder_buffer_value, new_value, old_value):
     direction  = direction if min(a1,a2) == a1 else -direction
     val = direction * min( a1, a2 )
     return val
-
+def limitValue(robot, value):
+    max_value = robot.info.wheels.max_encoder_buffer_value
+    if value > max_value:
+        return value % max_value
+    if value < 0:
+        abs_value = abs(value) % max_value
+        return max_value - abs_value
+    return value
 
 def computeWheelRotationSpeed(robot, new_value, old_value, run_time):
     rotation = computeRotation(robot.info.wheels.max_encoder_buffer_value, new_value, old_value)
