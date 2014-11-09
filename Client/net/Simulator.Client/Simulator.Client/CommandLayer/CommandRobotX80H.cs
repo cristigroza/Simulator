@@ -44,7 +44,7 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetIR1;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
         //Defect
         public override short GetCustomAD3()
@@ -56,28 +56,28 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetIR2;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public override short GetCustomAD5()
         {
             communication.SendCommand("GetIR3;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public override short GetCustomAD6()
         {
             communication.SendCommand("GetIR4;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public override short GetCustomAD7()
         {
             communication.SendCommand("GetIR5;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
 
@@ -86,7 +86,7 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetIR6;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
      

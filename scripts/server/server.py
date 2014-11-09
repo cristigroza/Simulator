@@ -83,7 +83,7 @@ class Server(threading.Thread):
             data = self._in_server_queue.get()
             if self.show_log:
                 self.log('Send: {}'.format(data))
-            self._connection.sendall(str(data))
+            self._connection.sendall(str(data) + '\n')
 
     def set_server_log(self, show):
         self.show_log = show

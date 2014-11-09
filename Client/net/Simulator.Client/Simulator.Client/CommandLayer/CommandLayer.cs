@@ -18,26 +18,26 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("getLeftWheelEncoderValue;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
         public virtual short GetSensorPot1() //For DRK8080
         {
             communication.SendCommand("getLeftWheelEncoderValue;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetEncoderPulse2()
         {
             communication.SendCommand("getRightWheelEncoderValue;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
         public virtual short GetSensorPot2()//For DRK8080
         {
             communication.SendCommand("getRightWheelEncoderValue;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
         
         #endregion
@@ -57,42 +57,43 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetSensorSonar1;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
+               
         }
 
         public virtual short GetSensorSonar2()
         {
             communication.SendCommand("GetSensorSonar2;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetSensorSonar3()
         {
             communication.SendCommand("GetSensorSonar3;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetSensorSonar4()
         {
             communication.SendCommand("GetSensorSonar4;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetSensorSonar5()
         {
             communication.SendCommand("GetSensorSonar5;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetSensorSonar6()
         {
             communication.SendCommand("GetSensorSonar6;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         } 
         #endregion
 
@@ -104,42 +105,42 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetIR1;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetCustomAD3()
         {
             communication.SendCommand("GetIR2;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetCustomAD4()
         {
             communication.SendCommand("GetIR3;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetCustomAD5()
         {
             communication.SendCommand("GetIR4;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetCustomAD6()
         {
             communication.SendCommand("GetIR5;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
         public virtual short GetCustomAD7()
         {
             communication.SendCommand("GetIR6;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
 
@@ -148,7 +149,7 @@ namespace Simulator.Client.CommandLayer
         {
             communication.SendCommand("GetIR7;");
             var ret = communication.GetCommand();
-            return Int16.Parse(ret);
+            return Convert.ToInt16(Convert.ToDouble(ret));
         }
 
        

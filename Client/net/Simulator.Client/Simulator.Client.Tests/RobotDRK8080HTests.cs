@@ -79,10 +79,49 @@ namespace Simulator.Client.Tests
             _robot.GetSensorPot2();
         }
 
+        [Test]
+        public void Events()
+        {
+            _robot.CustomSensorEvent += _robot_CustomSensorEvent;
+            _robot.StandardSensorEvent += _robot_StandardSensorEvent;
+            _robot.MotorSensorEvent += _robot_MotorSensorEvent;
+            while (true)
+            {
 
+            }
+        }
 
+        void _robot_MotorSensorEvent(object sender, EventArgs e)
+        {
+        }
 
+        void _robot_StandardSensorEvent(object sender, EventArgs e)
+        {
+        }
 
+        void _robot_CustomSensorEvent(object sender, EventArgs e)
+        {
+
+        }
+
+        [Test]
+        public void RotateAction()
+        {
+            int left;
+            int right;
+            while (true)
+            {
+
+                left = _robot.GetSensorPot1();
+                right = _robot.GetSensorPot2();
+                
+
+                left += 3000;
+                right += 3000;
+
+                _robot.DcMotorPositionTimeCtrAll((short)left, (short)right, 0, 0, 0, 0, 1000);
+            }
+        }
 
 
 

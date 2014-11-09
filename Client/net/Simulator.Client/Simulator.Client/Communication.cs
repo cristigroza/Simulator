@@ -28,10 +28,9 @@ namespace Simulator.Client
         public string GetCommand()
         {
     
-            var buffer =  new char[1024];
-            var ret = _streamReader.Read(buffer,0,1024);
-          
-            return ret.ToString();
+            var ret = _streamReader.ReadLine();
+
+            return ret;
         }
 
     }

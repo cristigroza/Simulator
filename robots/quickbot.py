@@ -268,8 +268,10 @@ class QuickBot(Robot):
     
     def diff2uni(self,diff):
         (vl,vr) = diff
-        v = (vl+vr) * self.info.wheels.radius/2;
-        w = (vr-vl) * self.info.wheels.radius/self.info.wheels.base_length;
+        v = (vl+vr)/2;
+        #v = (vl+vr) * self.info.wheels.radius/2;
+        w = (vr-vl)/self.info.wheels.base_length;
+        #w = (vr-vl) * self.info.wheels.radius/self.info.wheels.base_length;
         return (v,w)
     
     def get_wheel_speeds(self):

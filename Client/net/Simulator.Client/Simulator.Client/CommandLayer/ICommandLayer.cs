@@ -1,6 +1,75 @@
 ﻿namespace Simulator.Client.CommandLayer
 {
-     interface ICommandLayer :IRobotActions
+     interface ICommandLayer 
     {
+        #region Encoders
+        ///<summary>
+        /// Left wheel encoder value.
+        ///</summary>
+        short GetEncoderPulse1();
+        short GetSensorPot1();
+
+        ///<summary>
+        /// Right wheel encoder value.
+        ///</summary>
+        short GetEncoderPulse2();
+        short GetSensorPot2();
+
+        #endregion
+
+        void DcMotorPositionTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod);
+
+        #region Sonars
+        ///<summary>
+        /// Left
+        ///</summary>
+        short GetSensorSonar1();
+
+        ///<summary>
+        /// Front
+        ///</summary>
+        short GetSensorSonar2();
+
+        ///<summary>
+        /// Right
+        ///</summary>
+        short GetSensorSonar3();
+        short GetSensorSonar4();
+        short GetSensorSonar5();
+        short GetSensorSonar6();
+        #endregion
+
+        #region Ir
+        ///<summary>
+        /// Left
+        ///</summary>
+        short GetCustomAD8();
+        ///<summary>
+        /// Left down
+        ///</summary>
+        short GetSensorIRRange();
+        ///<summary>
+        /// Left up
+        ///</summary>
+        short GetCustomAD3();
+
+        ///<summary>
+        /// Right Up
+        ///</summary>
+        short GetCustomAD4();
+        ///<summary>
+        /// Right down
+        ///</summary>
+        short GetCustomAD5();
+        ///<summary>
+        /// Right
+        ///</summary>
+        short GetCustomAD6();
+        ///<summary>
+        /// Rear
+        ///</summary>
+        short GetCustomAD7();
+
+        #endregion
     }
 }

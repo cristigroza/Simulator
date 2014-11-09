@@ -77,5 +77,13 @@ namespace Simulator.Client
         short GetCustomAD7();
 
         #endregion
+
+        #region Events
+
+        event EventHandler StandardSensorEvent;
+        event EventHandler MotorSensorEvent;
+        event EventHandler CustomSensorEvent;
+
+        #endregion
     }
 }

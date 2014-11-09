@@ -95,6 +95,7 @@ class SimServer:
             self._robot.set_inputs((vl,vr))
             self._robot.move(self.time_constant)
 
+
             self._tracker.add_point(self._robot.get_pose())
             self._simParent.check_collisions()
             self._simParent.draw()

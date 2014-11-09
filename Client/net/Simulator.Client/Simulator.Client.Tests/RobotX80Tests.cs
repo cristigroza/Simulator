@@ -77,6 +77,25 @@ namespace Simulator.Client.Tests
         }
 
 
+        [Test]
+        public void RotateAction()
+        {
+            int left;
+            int right;
+            while (true)
+            {
+                //
+                //                left = _robot.GetSensorPot1();
+                //                right = _robot.GetSensorPot2();
+                left = _robot.GetEncoderPulse1();
+                right = _robot.GetEncoderPulse2();
+
+                left += 200;
+                right += 200;
+
+                _robot.DcMotorPositionTimeCtrAll((short)left, (short)right, 0, 0, 0, 0, 1000);
+            }
+        }
 
 
 
