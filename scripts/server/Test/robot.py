@@ -1,1 +1,5 @@
-__author__ = 'Cristi'
+from Test import app
+
+@app.route('/robot')
+def robot():
+    return "Hello, robot!"

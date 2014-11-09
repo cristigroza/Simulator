@@ -19,13 +19,17 @@ namespace Simulator.Client.Tests
         public void Dispose()
         {
             _robot.DcMotorPositionTimeCtrAll(0, 0, 0, 0, 0, 0, 1000);
+
         }
 
 
         [Test]
         public void Move_Robot_Forward_Using_PositionTimeCtr()
         {
-            _robot.DcMotorPositionTimeCtrAll(10000, 10000, 0, 0, 0, 0, 1000);
+            _robot.DcMotorPositionTimeCtrAll(1000, 1000, 0, 0, 0, 0, 1000);
+            var left = _robot.GetSensorPot1();
+            var right = _robot.GetSensorPot2();
+            _robot.DcMotorPositionTimeCtrAll((short)(left + 1000), (short)(right + 1000), 0, 0, 0, 0, 1000);
 
         }
         [Test]
@@ -62,7 +66,7 @@ namespace Simulator.Client.Tests
         [Test]
         public void Read_Robot_Sonar_Sensors()
         {
-            _robot.GetSensorSonar1();
+           short a = _robot.GetSensorSonar1();
             _robot.GetSensorSonar2();
             _robot.GetSensorSonar3();
             _robot.GetSensorSonar4();

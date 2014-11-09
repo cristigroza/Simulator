@@ -4,6 +4,7 @@
 # Description: This is the top-level application for QtSimiam.
 from __future__ import print_function
 import sys
+
 sys.path.insert(0, './scripts')
 sys.path.insert(0, './scripts/server')
 sys.path.insert(0, './gui')
@@ -18,3 +19,4 @@ if __name__ == "__main__":
     simWidget.show()
     simWidget.load_world("week7.xml")
     app.exec_()
+

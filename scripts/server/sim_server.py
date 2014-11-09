@@ -1,6 +1,6 @@
 import sys
-import threading
-import socket
+from server_configuration import ServerConfiguration
+from manager import Manager
 from server import Server
 import sim_server_helpers
 
@@ -9,10 +9,11 @@ try:
 except ImportError:
     import queue
 
-class SimServer:
 
+class SimServer:
     helpers = sim_server_helpers
-    def __init__(self, robot,  tracker, log_queue, simParent):
+
+    def __init__(self, robot, tracker, log_queue, simParent):
         self._robot = robot
 
         self._tracker = tracker
@@ -22,6 +23,7 @@ class SimServer:
         self._simParent = simParent
 
     def init_server(self):
+        self.server_manager = Manager()
         self._server_thread = Server(self._out_server_queue, self._logqueue)
         self._in_server_queue = self._server_thread.getOutQueue()
 
@@ -35,16 +37,16 @@ class SimServer:
         while not self._in_server_queue.empty():
             tpl = self.helpers.buildTuple(self._in_server_queue.get())
 
-            if isinstance(tpl,tuple):
+            if isinstance(tpl, tuple):
                 name, args = tpl
                 if name in self.__class__.__dict__:
                     try:
                         if args is None:
                             self.__class__.__dict__[name](self)
                         else:
-                            self.__class__.__dict__[name](self,*args)
+                            self.__class__.__dict__[name](self, *args)
                     except TypeError as e:
-                        self.log("Wrong sim_server event parameters {}{}".format(name,args))
+                        self.log("Wrong sim_server event parameters {}{}".format(name, args))
                         raise e
                     except Exception as e:
                         self.log("EXCEPTION: {}".format(sys.exc_info()))
@@ -55,44 +57,33 @@ class SimServer:
             else:
                 self.log("Wrong sim_server event format '{}'".format(tpl))
 
-
     def run(self, ipAddress, port):
-        if not self._server_thread.run_server:
-            self._server_thread._sock.close()
-            self.init_server()
+        self.server_manager.set_server_configuration(ServerConfiguration(ipAddress,int(port)))
+        self.server_manager.start_server()
 
-        if not self._server_thread.isAlive():
-            self._server_thread.setIpAddress(ipAddress)
-            self._server_thread.setPort(int(port))
-            self._server_thread.start()
-        else:
-            self.log("Server is running...")
+    def stop(self, ipAddress, port):
+        self.server_manager.set_server_configuration(ServerConfiguration(ipAddress,int(port)))
+        self.server_manager.stop_server()
 
-
-    def stop(self,ipAddress, port):
-        self._server_thread.run_server = False
-        temp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        temp_socket.connect( (ipAddress, int(port)))
-        temp_socket.close()
-
-    time_constant = 0.02 # 20 milliseconds
+    time_constant = 0.02  # 20 milliseconds
 
     def DcMotorPositionTimeCtrAll(self, left_wheel, right_wheel, run_time):
-        vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_ticks, run_time)
-        vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_ticks, run_time)
+        vl = self.helpers.computeWheelRotationSpeed(self._robot, left_wheel, self._robot.info.wheels.left_ticks,
+                                                    run_time)
+        vr = self.helpers.computeWheelRotationSpeed(self._robot, right_wheel, self._robot.info.wheels.right_ticks,
+                                                    run_time)
 
         self._robot.info.wheels.left_ticks = left_wheel
         self._robot.info.wheels.right_ticks = right_wheel
-        self.robot_move(vl,vr, run_time)
+        self.robot_move(vl, vr, run_time)
         self._out_server_queue.put("Done.")
 
 
-
-    def robot_move(self,vl,vr,run_time):
-        nrRuns = int(run_time/self.time_constant)
+    def robot_move(self, vl, vr, run_time):
+        nrRuns = int(run_time / self.time_constant)
 
         for x in range(0, nrRuns):
-            self._robot.set_inputs((vl,vr))
+            self._robot.set_inputs((vl, vr))
             self._robot.move(self.time_constant)
 
             self._tracker.add_point(self._robot.get_pose())
@@ -100,12 +91,11 @@ class SimServer:
             self._simParent.draw()
 
 
-
     def get_ir_sensor_readings(self, ir_sensor_id):
         info = self._robot.get_info()
         return info.ir_sensors.readings[ir_sensor_id]
 
-    def get_sonar_sensor_readings(self,sonar_sensor_id):
+    def get_sonar_sensor_readings(self, sonar_sensor_id):
         info = self._robot.get_info()
         return info.sonar_sensors.readings[sonar_sensor_id]
 
@@ -114,7 +104,8 @@ class SimServer:
 
     def getRightWheelEncoderValue(self):
         self._out_server_queue.put(self._robot.info.wheels.right_ticks)
-    #IR
+
+    # IR
     def GetIR1(self):
         self._out_server_queue.put(self.get_ir_sensor_readings(0))
 
@@ -162,6 +153,6 @@ class SimServer:
         self._out_server_queue.put(self.get_sonar_sensor_readings(5))
 
     def log(self, message):
-        print("{}: {}".format(self.__class__.__name__,message))
+        print("{}: {}".format(self.__class__.__name__, message))
         if self._logqueue is not None:
-            self._logqueue.append((self,message))
+            self._logqueue.append((self, message))

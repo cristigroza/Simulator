@@ -1,6 +1,7 @@
 import sys
 import socket
 import threading
+from manager import Manager
 from time import sleep
 try:
     import Queue as queue
@@ -20,6 +21,8 @@ class Server(threading.Thread):
         self.init_socket()
         self.show_log = True
         self.run_server = True
+        self.server_manager = Manager()
+
 
     def init_socket(self):
          self._sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -41,6 +44,12 @@ class Server(threading.Thread):
         self._run()
 
     def _run(self):
+
+        if self.server_manager.isServerRunning:
+            self.server_manager.stop_server()
+        else:
+            self.server_manager.start_server()
+        '''
         while self.run_server:
             try:
                 self.server_address = (self._ipAddress, self._port)
@@ -63,7 +72,7 @@ class Server(threading.Thread):
                 self.log("EXCEPTION: {}".format(sys.exc_info()))
                 self._sock.close()
                 self.init_socket()
-
+            '''
 
     def listen(self):
         while self.run_server:

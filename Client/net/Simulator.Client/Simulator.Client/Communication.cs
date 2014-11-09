@@ -29,9 +29,9 @@ namespace Simulator.Client
         {
     
             var buffer =  new char[1024];
-            var ret = _streamReader.Read(buffer,0,1024);
-          
-            return ret.ToString();
+             _streamReader.Read(buffer,0,1024);
+
+            return new string(buffer);   
         }
 
     }
