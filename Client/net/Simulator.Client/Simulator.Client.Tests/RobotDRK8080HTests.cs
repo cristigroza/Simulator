@@ -77,6 +77,7 @@ namespace Simulator.Client.Tests
             _robot.GetSensorPot1();
             _robot.GetEncoderPulse2();
             _robot.GetSensorPot2();
+            
         }
 
         [Test]
@@ -93,10 +94,21 @@ namespace Simulator.Client.Tests
 
         void _robot_MotorSensorEvent(object sender, EventArgs e)
         {
-        }
 
+        }
+        private object _sensors = new object();
         void _robot_StandardSensorEvent(object sender, EventArgs e)
         {
+            lock (_sensors)
+            {
+
+
+                _robot.GetSensorSonar1();
+                _robot.GetSensorSonar2();
+                _robot.GetSensorSonar3();
+                _robot.GetSensorSonar4();
+                _robot.GetSensorSonar5();
+            }
         }
 
         void _robot_CustomSensorEvent(object sender, EventArgs e)
@@ -116,8 +128,8 @@ namespace Simulator.Client.Tests
                 right = _robot.GetSensorPot2();
                 
 
-                left += 2000;
-                right += 2000;
+                left += 3000;
+                right += 3000;
 
                 _robot.DcMotorPositionTimeCtrAll((short)left, (short)right, 0, 0, 0, 0, 1000);
             }

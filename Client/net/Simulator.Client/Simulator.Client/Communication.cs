@@ -10,6 +10,7 @@ namespace Simulator.Client
 {
     class Communication
     {
+        private object _syncObj = new object();
         private readonly StreamWriter _streamWriter;
         private readonly StreamReader _streamReader;
         public Communication()
@@ -22,15 +23,22 @@ namespace Simulator.Client
 
         public void SendCommand(string command)
         {
-            _streamWriter.WriteLine(command);
+            lock (_syncObj)
+            {
+                _streamWriter.WriteLine(command);
+            }
         }
 
         public string GetCommand()
         {
-    
-            var ret = _streamReader.ReadLine();
 
-            return ret;
+            lock (_syncObj)
+            {
+                var ret = _streamReader.ReadLine();
+
+                return ret;
+            }
+            
         }
 
     }

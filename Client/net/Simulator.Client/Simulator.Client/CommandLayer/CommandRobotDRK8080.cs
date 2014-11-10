@@ -12,12 +12,12 @@ namespace Simulator.Client.CommandLayer
         #region Encoders
         public override short GetEncoderPulse1()
         {
-            return 0;
+           throw new NotSupportedException("DRK8080 doesn't have an encoder");
         }
 
         public override short GetEncoderPulse2()
         {
-            return 0;
+            throw new NotSupportedException("DRK8080 doesn't have an encoder");
         }
 
         #endregion

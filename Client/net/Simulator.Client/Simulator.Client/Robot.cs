@@ -1,26 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading;
+
 using System.Threading.Tasks;
+using System.Timers;
 using Simulator.Client.CommandLayer;
 
 namespace Simulator.Client
 {
     public class Robot : IRobotActions
     {
+        private object _lockObj = new object();
         private readonly Lazy<ICommandLayer> _command;
         private readonly Timer _standardSensorTimer;
         private readonly Timer _customSensorTimer;
         private readonly Timer _motorSensorTimer;
+
         public Robot()
         {
             _command = new Lazy<ICommandLayer>(CommandFactory.CreateCommandLayer);
+            _customSensorTimer = new Timer(50);
+            _customSensorTimer.Elapsed += OnCustomSensorEvent;
+          
 
-            _customSensorTimer = new Timer(OnCustomSensorEvent, null, 50, 50);
-            _motorSensorTimer = new Timer(OnMotorSensorEvent, null, 50, 50);
-            _standardSensorTimer = new Timer(OnStandardSensorEvent, null, 50, 50);
+            _motorSensorTimer = new Timer(50);
+            _motorSensorTimer.Elapsed += OnMotorSensorEvent;
+           
+
+            _standardSensorTimer = new Timer(50);
+            _standardSensorTimer.Elapsed += OnStandardSensorEvent;
+            
+
+        }
+
+      
+
+        public void connectRobot(string robot)
+        {
+
+        }
+
+        public void EnableStandardSensorSending()
+        {
+            _customSensorTimer.Enabled = true;
+            _motorSensorTimer.Enabled = true;
+            _standardSensorTimer.Enabled = true;
         }
 
         #region Encoders
@@ -52,6 +79,20 @@ namespace Simulator.Client
             _command.Value.DcMotorPositionTimeCtrAll(leftWheel, rightWheel, cmd3, cmd4, cmd5, cmd6, timePeriod);
         }
 
+        public void SuspendDcMotor(short channel)
+        {
+
+        }
+
+        public void DisableDcMotor(short channel)
+        {
+
+        }
+
+        public void SetDcMotorControlMode(short channel, short controlMode)
+        {
+
+        }
         #endregion
 
         #region Sonars
@@ -150,20 +191,35 @@ namespace Simulator.Client
             if (handler != null) handler(this, EventArgs.Empty);
         }
 
-        private void OnCustomSensorEvent(object state)
+        private void OnStandardSensorEvent(object sender, ElapsedEventArgs e)
         {
-            this.OnCustomSensorEvent();
+            lock (_lockObj)
+            {
+                OnStandardSensorEvent();
+            }
+           
         }
-        private void OnMotorSensorEvent(object state)
+
+        private void OnMotorSensorEvent(object sender, ElapsedEventArgs e)
         {
-            this.OnMotorSensorEvent();
+            lock (_lockObj)
+            {
+                OnMotorSensorEvent();
+            }
         }
-        private void OnStandardSensorEvent(object state)
+
+        private void OnCustomSensorEvent(object sender, ElapsedEventArgs e)
         {
-            this.OnStandardSensorEvent();
+            lock (_lockObj)
+            {
+                OnCustomSensorEvent();
+            }
         }
 
 
         #endregion
+
+
+
     }
 }

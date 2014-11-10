@@ -8,6 +8,10 @@ namespace Simulator.Client
 {
     public interface IRobotActions
     {
+        void connectRobot(string robot);
+        void SetDcMotorControlMode(short channel, short controlMode);
+        void EnableStandardSensorSending();
+
         #region Encoders
         ///<summary>
         /// Left wheel encoder value.
@@ -23,7 +27,12 @@ namespace Simulator.Client
 
         #endregion
 
+        #region Motor
+
         void DcMotorPositionTimeCtrAll(short leftWheel, short rightWheel, short cmd3, short cmd4, short cmd5, short cmd6, short timePeriod);
+        void SuspendDcMotor(short channel);
+        void DisableDcMotor(short channel); 
+        #endregion
 
         #region Sonars
         ///<summary>
